@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
-import threading
-import json
 import re
+
 
 def get_all_chapters_names(url,parser_type) :
     html_text = requests.get(url).text
@@ -18,6 +17,7 @@ def get_all_chapters_names(url,parser_type) :
 
     return chapters_list
 
+
 def get_chapter_intervals(chapter_list) :
     map_chapter_to_interval = dict()
     start_index = end_index = 0
@@ -28,6 +28,7 @@ def get_chapter_intervals(chapter_list) :
         end_index+=1
 
     return map_chapter_to_interval
+
 
 def get_all_words_from_chapters(chapters_list, url, parser_type) :
     map_eng_word_to_rus = dict()
@@ -46,22 +47,34 @@ def get_all_words_from_chapters(chapters_list, url, parser_type) :
 
     return map_eng_word_to_rus
 
-def load_to_json(filePath, english_to_russian_dict):
-    to_json = list()
-
-    for key,val in english_to_russian_dict.items():
-        to_json.append({key : val})
-
-    with open(filePath, 'w', encoding='utf-8') as f:
-        f.write(json.dumps(to_json, sort_keys=False, indent=4,
-                           ensure_ascii=False, separators=(',', ': ')))
 
 chapters_url = 'https://wooordhunt.ru/dic/content/en_ru'
 generalized_url = 'https://wooordhunt.ru/dic/list/en_ru/'
 parser_type = 'html.parser'
 
-all_chapters_names = get_all_chapters_names(chapters_url, parser_type)
-english_russian_dict = get_all_words_from_chapters(all_chapters_names, generalized_url, parser_type)
+# all_chapters_names = get_all_chapters_names(chapters_url, parser_type)
+# english_russian_dict = get_all_words_from_chapters(all_chapters_names, generalized_url, parser_type)
+# formated_eng_rus_dict = format_dictionary(english_russian_dict)
+#
+# for key, val in formated_eng_rus_dict.items():
+#     print(key + val)
+#
+# json_path = 'parsed_dictionary.json'
+# load_to_json(json_path, formated_eng_rus_dict)
 
-json_path = 'parsed_dictionary.json'
-load_to_json(json_path, english_russian_dict)
+# def format_dictionary(english_to_russian_dict):
+#     for key, val in english_to_russian_dict.items():
+#         english_to_russian_dict[key] = english_to_russian_dict[key].replace('</p>]', '')
+#         english_to_russian_dict[key] = english_to_russian_dict[key].strip(' ,/—')
+#
+#         end_del_index = english_to_russian_dict[key].find(']')
+#         if end_del_index != -1:
+#             english_to_russian_dict[key] = english_to_russian_dict[key][end_del_index + 1:]
+#
+#     return english_to_russian_dict
+
+
+# def load_to_json(filePath, english_to_russian_dict):
+#     with open(filePath, 'w', encoding='utf-8') as f:
+#         f.write(json.dumps(english_to_russian_dict, sort_keys=False, indent=4,
+#                            ensure_ascii=False, separators=(',', ': ')))
